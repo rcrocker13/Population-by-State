@@ -1,4 +1,5 @@
-// Descriptions of the variables in this call can be found -> https://api.census.gov/data/2013/pep/subcty/variables.html
+// Site with other API calls -> http://www.census.gov/data/developers/data-sets/population-estimates-and-projections.html
+// Descriptions of the variables -> https://api.census.gov/data/2013/pep/subcty/variables.html
 
 var APIKey = "8dc0417f8fc868ab67c9d9a47034f97789f6bcc9",
 	theUrl = "https://api.census.gov/data/2013/pep/stchar5?get=AGE,SEX,DATE,STNAME,RACE5,HISP,POP&for=state:*&key=" + APIKey,
