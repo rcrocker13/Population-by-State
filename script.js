@@ -2,6 +2,7 @@
 
 var APIKey = "8dc0417f8fc868ab67c9d9a47034f97789f6bcc9",
 	theUrl = "https://api.census.gov/data/2013/pep/stchar5?get=AGE,SEX,DATE,STNAME,RACE5,HISP,POP&for=state:*&key=" + APIKey,
+	//https://api.census.gov/data/2013/pep/stchar5?get=AGE,SEX,DATE,STNAME,RACE5,HISP,POP&for=state:*&key=" + APIKey,
 	request = $.getJSON(theUrl);
 
 request.done(function(populationData){
@@ -14,11 +15,10 @@ request.done(function(populationData){
 			age: 		+d[0], // age 0 to 100
 			sex: 		+d[1],
 			date:       +d[2],
-			state_name: d[3],
+			state: 		d[3],
 			race: 		+d[4],
 			hispanic: 	+d[5],
-			population: +d[6],
-			state: 		d[7]
+			population: parseInt(d[6])
 		});
 	});
 
@@ -234,5 +234,16 @@ request.done(function(populationData){
 		}
 	});
 
-	console.log(obj);
+	var augStatePop = obj.filter(function(d) {
+		return "8/1/2010" === d.date;
+	});
+
+	var augPopByState = d3.nest()
+		.key(function(d) { return d.state; })
+		// why does .rollup(function(v) { return v.population; }); return undefined?
+		.rollup(function(v) { return d3.sum(v, function(d) { return d.population; }); })
+		.map(augStatePop);
+
+	console.log(augPopByState);
+
 });
