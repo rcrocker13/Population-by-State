@@ -243,8 +243,59 @@ request.done(function(populationData){
 		.key(function(d) { return d.state; })
 		// why does .rollup(function(v) { return v.population; }); return undefined?
 		.rollup(function(v) { return d3.sum(v, function(d) { return d.population; }); })
-		.map(augStatePop);
+		.entries(augStatePop);
 
-	console.log(augPopByState);
+// ----------
+// Convert the JSON to CSV we code refactored from http://jsfiddle.net/hybrid13i/JXrwM/
+	function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+		//If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+		var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+		var CSV = '';
+
+		//This condition will generate the Label/Header
+		if (ShowLabel) {
+		    var row = "";
+
+		    //This loop will extract the label from 1st index of an array
+		    for (var index in arrData[0]) {
+
+		        //Now convert each value to string and comma-seprated
+		        row += index + ',';
+		    }
+
+					// by making the end parameter -1 we exclude the last comma
+		    row = row.slice(0, -1);
+
+		    //append Label row with line break
+		    CSV += row + '\r\n';
+		}
+
+		//1st loop is to extract each row
+		for (var i = 0; i < arrData.length; i++) {
+		    var row = "";
+
+		    //2nd loop will extract each column and convert it in string comma-seprated
+		    for (var index in arrData[i]) {
+		        row += '"' + arrData[i][index] + '",';
+		    }
+
+		    row.slice(0, row.length - 1);
+
+		    //add a line break after each row
+		    CSV += row + '\r\n';
+		}
+
+		if (CSV == '') {
+		    alert("Invalid data");
+		    return;
+		}
+
+		return CSV;
+
+	}
+
+	// Uncomment the line below to get
+	// console.log(JSONToCSVConvertor(augPopByState, "State Population", true));
 
 });
